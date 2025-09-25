@@ -1,5 +1,5 @@
                                                                    Hi👋,
-                                                                 I'm Laxmi S Jangamashetti
+                                                          I'm Laxmi S Jangamashetti
 <br><br>🎓 2nd year Computer Science and Engineering student  <br>💻 Passionate about coding, problem solving, and software development  <br>📚 Currently learning Data Structures, Algorithms, and exploring new technologies  <br>🚀 Eager to contribute to open-source and work on impactful projects<br>
 
 
