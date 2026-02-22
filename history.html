@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Search | History</title>
+
+    <style>
+        /* ===== Global ===== */
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(120deg, #f8fafc, #eef2ff);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== Navigation ===== */
+        nav {
+            background: #1e3a8a;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* ===== Heading ===== */
+        h2 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+        }
+
+        /* ===== Table ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        /* ===== Empty State ===== */
+        .empty {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav>
+    <a href="index.html">Input</a>
+    <a href="search.html">Search</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="history.html">History</a>
+    <a href="settings.html">Settings</a>
+</nav>
+
+<!-- Content -->
+<div class="container">
+    <h2>🕒 Search History & Audit Log</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Keyword</th>
+            <th>Matched</th>
+            <th>Not Matched</th>
+            <th>Search Time</th>
+        </tr>
+        </thead>
+        <tbody id="historyBody">
+        <tr class="empty">
+            <td colspan="4">Loading history...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    fetch("/api/history")
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById("historyBody");
+            tbody.innerHTML = "";
+
+            if(data.length === 0){
+                tbody.innerHTML = "<tr class='empty'><td colspan='4'>No search history available</td></tr>";
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${item.keyword}</td>
+                <td>${item.matchedCount}</td>
+                <td>${item.notMatchedCount}</td>
+                <td>${item.time}</td>
+            `;
+                tbody.appendChild(tr);
+            });
+        });
+</script>
+
+</body>
+</html>
