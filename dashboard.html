@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Search | Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* ===== Global ===== */
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(120deg, #f1f5f9, #eef2ff);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== Navigation ===== */
+    nav {
+      background: #1e3a8a;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 600;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    /* ===== Heading ===== */
+    h2 {
+      color: #1e3a8a;
+      margin-bottom: 20px;
+    }
+
+    /* ===== Controls ===== */
+    .controls {
+      margin-bottom: 20px;
+    }
+
+    .controls input {
+      padding: 10px;
+      width: 60%;
+      max-width: 300px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 15px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .controls button:hover {
+      background: #1d4ed8;
+    }
+
+    /* ===== Chart Card ===== */
+    .chart-box {
+      margin-top: 30px;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav>
+  <a href="index.html">Input</a>
+  <a href="search.html">Search</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="history.html">History</a>
+  <a href="settings.html">Settings</a>
+</nav>
+
+<!-- Dashboard Content -->
+<div class="container">
+  <h2>📊 Matched vs Not Matched Analytics</h2>
+
+  <div class="controls">
+    <input type="text" id="keyword" placeholder="Enter keyword for analysis">
+    <button onclick="loadChart()">Generate Chart</button>
+  </div>
+
+  <div class="chart-box">
+    <canvas id="chart" width="400" height="250"></canvas>
+  </div>
+</div>
+
+<script>
+  let chartInstance = null;
+
+  function loadChart(){
+    const key = document.getElementById("keyword").value;
+    if(!key){
+      alert("Please enter a keyword");
+      return;
+    }
+
+    fetch("/api/search?keyword=" + key)
+            .then(res => res.json())
+            .then(data => {
+
+              const ctx = document.getElementById("chart").getContext("2d");
+
+              if(chartInstance){
+                chartInstance.destroy();
+              }
+
+              chartInstance = new Chart(ctx, {
+                type: "pie",
+                data: {
+                  labels: ["Matched", "Not Matched"],
+                  datasets: [{
+                    data: [data.matchedCount, data.notMatchedCount],
+                    backgroundColor: ["#4ade80", "#f87171"]
+                  }]
+                },
+                options: {
+                  plugins: {
+                    legend: {
+                      position: "bottom"
+                    }
+                  }
+                }
+              });
+            });
+  }
+</script>
+
+</body>
+</html>
